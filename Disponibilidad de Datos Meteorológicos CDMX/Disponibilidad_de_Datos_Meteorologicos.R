@@ -23,7 +23,7 @@ url <-  paste0("https://smn.cna.gob.mx/tools/RESOURCES/Diarios/",
 datos_meteo_cdmx <- procesa_datos_diarios(url) %>% mutate(Estacion = as.character(cat))
 
 # Datos de registros diarios
-anios_inf <- datos_meteo_cdmx[-1] %>%
+anios_inf <- datos_meteo_cdmx %>%
   group_by(lubridate::year(FECHA)) %>%
   summarise(dias = n())
 
