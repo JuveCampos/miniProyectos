@@ -1,7 +1,7 @@
 # miniProyectos
 Repositorio de Proyectos Pequeños
 
-**Contenido: **
+**Contenido:**
 
 **1. Gráfica de disponibilidad de información meteorológica de la Ciudad de México.**
 
