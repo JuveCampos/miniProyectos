@@ -10,3 +10,5 @@ Gráfica que nos permite observar los datos disponibles de información meteorol
 **2. Repositorio Mapa de Precipitación de la Ciudad de México.**
 
 Este Repositorio incluye los pasos para realizar el mapa de distribución anual de lluvias de la Ciudad de México que se puede ver en mi cuenta de twitter (repositorio que no planeaba hacer pero que me vi obligado a construir). La fuente de los datos es la sección de Datos Abiertos del Atlas de Peligros y Riesgos de la Ciudad de México.
+
+Dudas o aclaraciones: juveroark@gmail.com
