@@ -1,0 +1,284 @@
+---
+title: "Manejo de Texto con datos del API"
+author: "Juvenal Campos"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+
+# Manejo de Datos del API
+
+En este tutorial vamos a aprender lo basico del manejo de texto con la librería `stringR`.
+
+El propósito de esta sesión es el capacitar al interesado en las herramientas que provee **R** para el manejo de texto en general y para sacar el máximo aprovechamiento de sus bases obtenidas por las consultas de la API-EMIS del LNPP en particular. 
+
+En esta sesión se muestra un ejemplo la manipulación necesaria para la limpieza y la exploración de una consulta de noticias mediante la API antes mencionada.
+
+## Sobre la base de datos
+
+La base de datos consiste en una busqueda de noticias relacionadas con *lluvias* e *inundaciones* en la *Ciudad de México* a lo largo de los años de registro. 
+
+**NOTA: ** En la presente página no se muestran bases de datos ni hay forma de descargarlos. Sin embargo, en caso de que haya alguna queja sobre la presente página favor de avisar al autor. El propósito de este trabajo es meramente educativo.
+
+## Setup 
+
+Instalamos librerías y verificamos que se tenga el mismo `Locale` en todas las computadoras de la sala.
+
+```{r}
+
+library(pacman)
+p_load(rebus, stringr, tidyverse, htmltools, readr)
+
+# Librerias
+# library(rebus)
+# library(stringr)
+# library(tidyverse)
+
+# Fijamos el Locale
+# CHECAR QUE TODOS TENGAN ESTO!!
+Sys.setlocale("LC_ALL", 'en_US.UTF-8')
+default_locale() # Verificar que sean los mismos!
+
+# <locale>
+#   Numbers:  123,456.78
+# Formats:  %AD / %AT
+# Timezone: UTC
+# Encoding: UTF-8
+# <date_names>
+#   Days:   Sunday (Sun), Monday (Mon), Tuesday (Tue), Wednesday (Wed), Thursday (Thu), Friday (Fri),
+# Saturday (Sat)
+# Months: January (Jan), February (Feb), March (Mar), April (Apr), May (May), June (Jun), July
+# (Jul), August (Aug), September (Sep), October (Oct), November (Nov), December
+# (Dec)
+# AM/PM:  AM/PM
+
+
+```
+
+## Abrimos y exploramos la base
+
+La base cuenta con las siguientes variables: 
+
+* `X1`, contador (no sirve de nada)
+
+* `fecha`, la fecha en que se publicó el artículo
+
+* `periodico`, el periódico en el que se publicó la nota
+
+* `format`, el formato en el que se encuentra la información (HTML, página web)
+
+* `title`, el título de la nota
+
+* `abstract`, un resumen de la nota periodística
+
+* `body`, el texto de la nota periodística en formato HTML
+
+* `pages`, el número de páginas en el que se encuentra la nota periodistica
+
+* `size`, el numero de palabras que tiene cada nota
+
+* `texto`, el texto plano de la nota
+
+A continuación, exploraremos la base de datos:
+
+```{r}
+
+# 1. Leemos los datos con readr 
+datos <- readr::read_csv("Noticias_inundaciones.csv") # Podemos ver el tipo de Variable
+head(datos)   # Primeros 10 registros
+names(datos)  # Nombre de las variables
+dim(datos)    # Dimensiones de la tabla
+
+# 2. Vemos los datos 
+View(datos)
+
+# EXPLORACION DE LOS DATOS!
+# 3. Elaboramos una funcion exploratoria y exploramos las variables
+niveles <- function(x) levels(as.factor(x)) # Funcion Propia :9
+niveles(datos$periodico)                    # 13 periodicos
+niveles(datos$format)                       # Solo HTML
+niveles(datos$title)[1:10]                  # 1053 titulos
+niveles(datos$body)[1]                      # Es codigo html! Lo podemos # visualizar con el str_view()
+# Ver el HTML
+str_view(datos$body[1], pattern = " ")
+
+# Seguimos explorando
+niveles(datos$pages)      # Numero de paginas de cada articulo (varía de 1 a 25 pags)
+datos$size[1:10] # Numero de palabras que tiene cada articulo
+str_length(datos$body)[1:10] # Longitud de las primeras 10 palabras
+
+```
+
+## Problema 1: ¿Hay títulos repetidos?
+
+Una pregunta lógica que podemos hacernos es saber si hay títulos repetidos en la base de datos. El que haya títulos repetidos nos dice que hay notas que, o están duplicadas, o hablan de los mismos temas (aunque esto no es necesariamente cierto). 
+
+Con el siguiente código exploraremos si hay notas repetidas.
+
+```{r}
+
+# Forma Facil
+table(datos$title[duplicated(datos$title)]) %>% head()
+```
+
+En la tabla anterior, tenemos notas repetidas que posiblemente nos esten dando la misma información, sin embargo, están desordenadas. Una forma facil de generar una tabla donde los títulos están ordenados de mayor a menor repetición es mediante el siguiente código: 
+
+```{r}
+# Forma tidy
+datos$title[duplicated(datos$title)] %>% 
+  as_tibble() %>% 
+  group_by(value) %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n))
+
+```
+
+Como podemos observar, `Pronostico del tiempo` se repite demasiadas veces y no aporta a nuestro objetivo principal (el conocer los eventos e inundación en la Ciudad de México). Igualmente, `CARBAJAL INVERSIÓN CHIAPAS` ni `Columnas: CORPORATIVO` se ven de mucha utilidad, y sin embargo, se repiten bastante. **Nos haremos cargo posteriormente de estos casos, por ahora lo dejaremos así.**
+
+## Problema 2. Eliminación de los HTML tags.
+
+Los tags nos sirven para darle formato a páginas web, sin embargo, no nos interesa tenerlos a la hora del análisis. Para detectar estos patrones, utilizaremos `expresiones regulares`.
+
+```{r}
+# ELIMINAMOS LOS TAGS #
+
+# patron_sencillo <- or1(c('<span style="color: red">','</span>'))
+# <regex> 
+patron_sencillo <- '(?:<span style="color: red">|</span>)'
+
+# patron_complejo <- '<' %R% optional('/') %R% captura(WRD %R% optional(SPC) %R% optional(char_class("\":=!"))) %R% ">"
+# regex> 
+patron_complejo <- '<[/]?([\\w[\\s]?[":=!]?]+)>'
+
+# Extraemos las palabras
+str_extract_all(datos$title, patron_sencillo) %>% unlist() %>% niveles() # Nos damos cuenta de que solo hay 2 niveles... pero y si hubiera mas?
+str_extract_all(datos$title, patron_complejo) %>% unlist() %>% niveles() # Caso General
+str_view_all(datos$title[1:10], pattern = patron_sencillo, match = T)
+datos$title <- str_remove(datos$title, pattern = patron_complejo)
+View(datos)
+# No elimino todo!!! -- CHECAR LA MODIFICACION
+datos$title <- str_remove_all(datos$title, pattern = patron_complejo)
+
+# Y en otras variables
+str_extract_all(datos$abstract[1], pattern = patron_complejo)
+str_extract_all(datos$body[1], pattern = patron_complejo)
+
+```
+
+Como podemos ver arriba, el `patron_sencillo` no hubiera capturado los tags `<!UNIGEN548>` o los `<h3>`, porque no los consideraba específicamente. Por eso es mejor el `patron_complejo`, ya que es una solución más general.
+
+## Problema 3. Queremos ver que periódicos aportaron mas a nuestra base.
+
+
+```{r, fig.width = 10, fig.height= 8}
+
+# 1. Detectamos que celdas tienen Economista o El Universal o el EXCELSIOR como periodico Principal
+niveles(datos$periodico)
+
+# 2. Detectamos los patrones
+
+# Approach: Eliminando todo lo que este despues del signo 
+#pat_guion <-  "-" %R% captura(WRD %R% SPC) %R% END
+pat_guion <- "-([\\w\\s]+)$"
+str_view(datos$periodico[1:15], pat_guion, match = T)
+datos$periodico <- str_remove_all(datos$periodico, pattern = pat_guion)
+niveles(datos$periodico)[1:10] # Se repite el UNIVERSAL! Por que?
+# Rehacemos el patron
+#pat_guion <-  optional(SPC) %R% "-" %R% captura(WRD %R% SPC) %R% END
+pat_guion <- '[\\s]?-([\\w\\s]+)$'
+datos$periodico <- str_remove_all(datos$periodico, pattern = pat_guion)
+niveles(datos$periodico) # Se repite el UNIVERSAL! Por que?
+# R: El espacio del final... como lo eliminamos?
+#pat_espacio_final <- SPC %R% END
+pat_espacio_final <- "\\s$"
+datos$periodico <- str_remove_all(datos$periodico, pattern = pat_espacio_final)
+
+# Y si en vez de DPA queremos volver a tener DPA-NEWS? 
+datos$periodico <- str_replace_all(datos$periodico, pattern = "DPA", replacement = "DPA - Political News")
+datos$periodico <- str_replace_all(datos$periodico, pattern = "Excelsior Online", replacement = "Excelsior")
+niveles(datos$periodico)
+
+# Visualizamos datos 
+ggplot(data = datos, aes(x = periodico)) + geom_bar() + theme(axis.text.x = element_text(angle = 90, hjust = 1))
+#ggplot(data = datos, aes(x = periodico, fill = periodico)) + geom_bar() + theme_minimal() + scale_color_brewer("Blues")
+
+```
+
+## Problema 4. Eliminar noticias que no son de interés. 
+
+Como pudimos ver en el _Problema 1_, hay muchas noticias repetidas y que no aportan información útil al problema. Utilizaremos la librería `stringr` para poder eliminar estas noticias de nuestra base de datos. 
+
+
+```{r, warning=FALSE, fig.width = 10, fig.height=10}
+##################################################################
+# ELIMINAR NOTICIAS Y QUEDARME SOLO CON LAS QUE DICEN INUNDACION #
+##################################################################
+
+# Tidy repaso! Vemos las noticias repetidas!
+FREC <- datos$title %>% 
+  as_data_frame() %>% 
+  group_by(value) %>% 
+  summarise(n = n()) %>% 
+  arrange(desc(n))
+
+# Visualizamos
+FREC
+
+#-----------------#
+# E L I M I N A R 
+#-----------------#
+
+# Generamos una variable con datos en Minusculas
+# NOTA! De esta manera es mas facil trabajar con expresiones regulares!
+# Pero no es obligatorio
+datos$minus <- tolower(datos$title)      # Convertimos a minusculas
+palabras <- c( "pronóstico del tiempo" , 
+               "pronostico del tiempo", 
+               "chiapas", 
+               "veracruz", 
+               "crême", 
+               "hermanos fuentes", 
+               "cardenas visita")
+
+#pat_noticias <- rebus::or1(palabras)
+pat_noticias <- paste0("(?:", paste(palabras, collapse = "|"), ")")
+
+str_view_all(datos$minus[1:15], pattern = pat_noticias, match = T)
+# Generamos dummy!
+datos$noticia_inservible <-  str_detect(datos$minus, pattern = pat_noticias) 
+
+datos <- datos %>% 
+  filter(noticia_inservible != TRUE)
+
+# Quedarme solo con las que dicen inundacion # T i d y 
+noticias_inundacion <- datos %>%
+  mutate(tiene_inundacion = str_detect(minus, pattern = "inundaci")) %>%
+  filter(tiene_inundacion == TRUE) %>% 
+  select(minus, tiene_inundacion)
+
+# Inundacion o lluvias
+noticias_inundacion_lluvias <- datos %>%
+  mutate(tiene_inundacion = str_detect(minus, pattern = or1(c("inundaci","lluvia")))) %>%
+  filter(tiene_inundacion == TRUE) %>% 
+  select(minus, tiene_inundacion, body)
+
+# LIMPIAMOS TAGS
+noticias_inundacion_lluvias$body <- str_remove_all(noticias_inundacion_lluvias$body, pattern = patron_complejo)
+```
+
+## Problema 5. Queremos saber que palabras se repiten más.
+
+Para hacer limpieza de palabras y exploración de la base de datos, haremos un wordCloud para averigüar que temas se repiten más frecuentemente.
+
+```{r, warning=FALSE, fig.width = 10, fig.height=10}
+# Creamos nube de palabras
+source("https://raw.githubusercontent.com/JuveCampos/DataEng/master/R/create_fast_wordCloud.R")
+create_wordcloud(noticias_inundacion_lluvias$body, stop_words = c("méxico", "ciudad", "así"), num_words = 200)
+# Frecuencia palabras
+freq_palabras[1:30,]
+
+```
+
+
+
+
