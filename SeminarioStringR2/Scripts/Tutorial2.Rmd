@@ -1,0 +1,32 @@
+---
+title: "Clase2 StringR"
+author: "Juvenal Campos"
+date: "2/4/2019"
+output: html_document
+---
+
+# Introducción 
+
+En esta sesión realizaremos ejemplos básicos de manejo de texto con la libreria Stringr de R. 
+
+```{r setup}
+
+# Leemos el script de setup 
+#source("scripts/setup.R")
+
+# Invocamos a las librerias
+library(stringr)
+library(tidyverse)
+```
+
+
+## Ejemplo 1. Sobre como usar `stringr` para limpiar bases de textos.
+
+Para este ejemplo, vamos a utilizar `stringr` para limpiar typos generados por utilizar encodings incorrectos. 
+
+**Paso 1. Abrimos la base. **
+
+
+
+
+
