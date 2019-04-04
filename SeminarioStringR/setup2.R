@@ -1,6 +1,6 @@
 # Checar si esta instalado Pacman
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(sf, tidyverse, rebus, readr, plotly, leaflet, htmltools)
+pacman::p_load(sf, tidyverse, rebus, readr, plotly, leaflet)
 #Sys.setlocale("LC_ALL", 'en_US.UTF-8')
 # default_locale() # Verificar que sean 
 
@@ -9,6 +9,4 @@ source("https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/Semina
 niveles <- function(x) levels(as.factor(x))
 
 # Leemos Bases de Datos 
-noticias <- read_csv("https://github.com/JuveCampos/miniProyectos/raw/master/SeminarioStringR2/BasesDeDatos/Noticias_inundaciones.csv") %>% select(abstract, body)
-
-
+datos <- read_csv("https://github.com/JuveCampos/miniProyectos/raw/master/SeminarioStringR2/BasesDeDatos/Noticias_inundaciones.csv") 
