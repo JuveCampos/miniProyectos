@@ -1,6 +1,6 @@
 # Checar si esta instalado Pacman
 if (!require("pacman")) install.packages("pacman")
-pacman::p_load(sf, tidyverse, rebus, readr, plotly, leaflet)
+pacman::p_load(sf, tidyverse, rebus, readr, plotly, leaflet, htmltools)
 #Sys.setlocale("LC_ALL", 'en_US.UTF-8')
 # default_locale() # Verificar que sean 
 
