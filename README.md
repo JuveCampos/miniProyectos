@@ -13,6 +13,6 @@ Este Repositorio incluye los pasos para realizar el mapa de distribución anual 
 
 **3. Seminario `stringr` y manejo de bases de datos de noticias.**
 
-Esta carpeta contiene material utilizado para un seminario de manejo, exploración, limpieza y manipulación de bases de datos de noticias don la librería `stringr` de R. Aquí hacemos un repaso al uso y manejo de expresiones regulares o `regex`, limpieza de `html tags`, exploración de bases de datos de texto y creación rápida de nubes de palabras. La base de datos no está disponible. El material se puede revisar en http://rpubs.com/Juve_Campos/stringrApi .
+Esta carpeta contiene material utilizado para un seminario de manejo, exploración, limpieza y manipulación de bases de datos de noticias don la librería `stringr` de R. Aquí hacemos un repaso al uso y manejo de expresiones regulares o `regex`, limpieza de `html tags`, exploración de bases de datos de texto y creación rápida de nubes de palabras. El material se puede revisar en http://rpubs.com/Juve_Campos/stringrApi .
 
 Dudas o aclaraciones: juveroark@gmail.com
