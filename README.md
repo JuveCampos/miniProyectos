@@ -15,7 +15,7 @@ Este Repositorio incluye los pasos para realizar el mapa de distribución anual 
 
 Esta carpeta contiene material utilizado para un seminario de manejo, exploración, limpieza y manipulación de bases de datos de noticias don la librería `stringr` de R. Aquí hacemos un repaso al uso y manejo de expresiones regulares o `regex`, limpieza de `html tags`, exploración de bases de datos de texto y creación rápida de nubes de palabras. El material se puede revisar en http://rpubs.com/Juve_Campos/stringrApi .
 
-**4. Datos EMAs (Estaciones Meteorológicas Automaticas). Procesamiento y gráficas
+**4. Datos EMAs (Estaciones Meteorológicas Automaticas). Procesamiento y gráficas.**
 
 Este repositorio incluye un script para procesar y graficar datos de las Estaciones Meteorológicas Automáticas de la CONAGUA, cuya información está disponible en este [enlace](https://smn.cna.gob.mx/es/estaciones-meteorologicas-automaticas). El objetivo es generar un programa que permita al usuario automatizar la descarga y las gráficas de la información meteorológica que se genera de manera diaria en el país. 
 
