@@ -98,7 +98,7 @@ ggplot(data = datos3, aes(x = `AAAA/MM/DD HH:MM HORAZ`, y = `Radiación Solar (W
        subtitle = paste0(datos_estacion[2], " (",datos_estacion[1], ")"),
        x = "Fecha (MM/DD HH:MM, Año: 2019)", 
        y = "Radiación Solar", 
-       caption = "Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos el 25-04-2019") +
+       caption = paste0("Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al ", as.character(Sys.Date()))) +
   tema_juve + 
   scale_x_datetime(labels = scales::date_format("%d/%m %H:%M"), date_breaks = "1 week") + 
   scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " W/m\U00B2"))
@@ -110,7 +110,7 @@ ggplot(data = datos3, aes(x = `AAAA/MM/DD HH:MM HORAZ`, y = datos3$`Humedad rela
        subtitle = paste0(datos_estacion[2], " (",datos_estacion[1], ")"),
        x = "Fecha (DD/MM HH:MM, Año: 2019)", 
        y = "Humedad Relativa (%)", 
-       caption = "Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al 25-04-2019") +
+       caption = paste0("Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al ", as.character(Sys.Date()))) +
   tema_juve + 
   scale_x_datetime(labels = scales::date_format("%d/%m %H:%M"), date_breaks = "1 week") + 
   scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " %"))
@@ -122,7 +122,7 @@ ggplot(data = datos3, aes(x = `AAAA/MM/DD HH:MM HORAZ`, y = datos3$`Temperatura 
        subtitle = paste0(datos_estacion[2], " (",datos_estacion[1], ")"),
        x = "Fecha (AAAA/MM/DD HH:MM)",
        y = "Temperatura del aire (°C)",
-       caption = "Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al 25-04-2019") +
+       caption = paste0("Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al ", as.character(Sys.Date()))) +
   tema_juve +
   scale_x_datetime(labels = scales::date_format("%d/%m %H:%M"), date_breaks = "1 week") +
   scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " °C"))
@@ -134,7 +134,7 @@ ggplot(data = datos3, aes(x = `AAAA/MM/DD HH:MM HORAZ`, y = datos3$`   Presión 
        subtitle = paste0(datos_estacion[2], " (",datos_estacion[1], ")"),
        x = "Fecha (MM/DD, Año: 2019)", 
        y = "Presión atmosférica en mmHg (milímetros de mercurio)", 
-       caption = "Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al 25-04-2019") +
+       caption = paste0("Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al ", as.character(Sys.Date()))) +
   tema_juve  +   
   scale_x_datetime(labels = scales::date_format("%d/%m"), date_breaks = "1 week")  + 
   scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " mmHg"), expand = c(0,0))
@@ -146,8 +146,10 @@ ggplot(data = precip90, aes(x = fecha, y = precip_por_dia)) +
        subtitle = paste0(datos_estacion[2], " (",datos_estacion[1], ")"),
        x = "Fecha (MM/DD, Año: 2019)", 
        y = "Precipitación diaria acumulada", 
-       caption = "Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al 25-04-2019") +
+       caption = paste0("Elaboración propia con datos del SMN-Conagua. 2019. Datos obtenidos al ", as.character(Sys.Date()))) +
        tema_juve  +   
        scale_x_date(labels = scales::date_format("%d/%m"), date_breaks = "1 week")  + 
-scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " mm"), expand = c(0,0))
+       scale_y_continuous(labels = scales::dollar_format(prefix = "", suffix = " mm"), 
+                          expand = c(0,0), 
+                          limits = c(0,max(precip90$precip_por_dia)*1.1)) 
 
