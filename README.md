@@ -19,4 +19,8 @@ Esta carpeta contiene material utilizado para un seminario de manejo, exploraci�
 
 Este repositorio incluye un script para procesar y graficar datos de las Estaciones Meteorológicas Automáticas de la CONAGUA, cuya información está disponible en este [enlace](https://smn.cna.gob.mx/es/estaciones-meteorologicas-automaticas). El objetivo es generar un programa que permita al usuario automatizar la descarga y las gráficas de la información meteorológica que se genera de manera diaria en el país. 
 
+**5. Elaboración de un WordCloud con el texto del "Plan Nacional de Desarrollo".**
+
+Esta carpeta contiene el método para realizar un Wordcloud con el texto referido, obtenido de la cuenta de twitter del presidente de México. La versión del texto utilizada es la anunciada en [esta publicación](https://twitter.com/lopezobrador_/status/1123648826609414145). El color utilizado es el color oficial del Gobierno de México.
+
 Dudas o aclaraciones: juveroark@gmail.com
