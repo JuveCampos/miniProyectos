@@ -1,4 +1,4 @@
-# miniProyectos
+# Mini Proyectos
 Repositorio de Proyectos Pequeños
 
 **Contenido:**
