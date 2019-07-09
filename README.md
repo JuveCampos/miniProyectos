@@ -23,4 +23,9 @@ Este repositorio incluye un script para procesar y graficar datos de las Estacio
 
 Esta carpeta contiene el método para realizar un Wordcloud con el texto referido, obtenido de la cuenta de twitter del presidente de México. La versión del texto utilizada es la anunciada en [esta publicación](https://twitter.com/lopezobrador_/status/1123648826609414145). Colores y tipografía basados en el manual de identidad gráfica del Gobierno de México disponible [aquí](https://sader.gob.mx/sites/default/files/sagarpa/document/2018/12/03/1567/03122018-manual-gmx-sader.pdf) y fuentes disponibles en [este enlace](https://sader.gob.mx/sites/default/files/sagarpa/document/2018/12/03/1567/03122018-fuentes.zip).
 
+**6. Elaboración de un WordCloud de tweets sobre la renuncia de Carlos Urzúa el 9 de Julio de 2019.**
+
+Se incluye código y base de datos del wordcloud de los tweets de la ultima hora (13:00) relativos a la renuncia de Carlos Urzúa. 
+Los tweets están disponibles en el repositorio. 
+
 Dudas o aclaraciones: juveroark@gmail.com
