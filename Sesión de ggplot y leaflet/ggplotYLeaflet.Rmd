@@ -1,0 +1,363 @@
+---
+title: "Introducción a manejo de Bases de datos y visualización con ggplot y leaflet"
+author: "Juvenal Campos"
+date: "9/18/2019"
+output: html_document
+---
+
+<style>
+
+@import url('https://fonts.googleapis.com/css?family=Poppins&display=swap');
+
+body {
+text-align: justify;
+}
+
+h2 {
+ color: #0f7d6e;
+}
+
+h1 {
+ color: blue;
+ text-align: center;
+}
+
+h4 {
+ color: blue;
+ text-align: center;
+}
+
+p {
+  font-family: Poppins; 
+  font-size:14;
+}
+
+body { background-color: #fff9ed; }
+
+</style>
+
+
+```{r, echo=FALSE}
+knitr::opts_chunk$set(fig.width=10, fig.height=8) 
+```
+
+# Ejemplo de estructura
+
+Para el presente ejemplo vamos a explorar una propuesta de estructura para un analisis hecho en **R**.
+
+Esta es una propuesta, por lo que queda a libertad de ustedes seleccionar la estructura que deseen aplicar a sus proyectos. 
+
+El presente código es reproducible, copiando y pegando el código en tu sesión de **RStudio**.
+
+## Presentación
+
+Primeramente, hacemos una presentación del trabajo. Podemos iniciar poniendo nuestro nombre y el propósito del script. 
+
+```{r}
+#################################
+# JORGE JUVENAL CAMPOS FERREIRA #
+#      CODIGO DEMO NUMERO 1     #
+#################################
+
+## PREGUNTA: CUANTAS COLONIAS TIENEN LAS DEMARCACIONES (MPIOS O DELEGACIONES) EN LA CDMX? 
+```
+
+## Configurando el entorno de trabajo
+
+Igualmente, configuramos el entorno de trabajo en el cuál correrá el script. Entre las configuraciones más comunes estan las siguientes: 
+
+1. Remover la notación científica. 
+
+2. Seleccionar el `locale`, el cual se puede entender como el conjunto de parámetros y caracteres que definen el lenguaje y el país que reconoce la sesión de R. Para este caso utilizaremos el `es_ES.UTF-8`. 
+
+3. Otra configuración consiste en remover todos los objetos del Ambiente Global. 
+
+```{r}
+#-------------------------------------------#
+# Primero: Configurar el entorno de trabajo #
+#-------------------------------------------#
+
+# 1. Removemos notación científica
+options(scipen = 999)
+
+# 2. Caracteres usados en el idioma español
+Sys.setlocale("LC_ALL", 'es_ES.UTF-8')
+
+# 3. Eliminamos los objetos que hay en el Environment
+rm(list = ls())
+```
+
+## Sección de Bibliotecas/Paquetes 
+
+Las Bibliotecas son colecciones de funciones de R, bases de datos y códigos compilados en un formato bien definido. En vez de programar desde cero una función, podemos descargar una biblioteca y utilizar una función predefinida. 
+
+Para llamar las bibliotecas, podemos utilizar la función `library()` o utilizar la función `p_load()` de la biblioteca `pacman` como se ve a continuación. 
+
+La línea de código `if (!require("pacman")) install.packages("pacman")` instala la biblioteca `pacman` si RStudio detecta que no está instalada entre nuestras bibliotecas. 
+
+```{r}
+# ------------------------------ #
+# Segundo: Sección de librerías. #
+# ------------------------------ #
+
+# Checar si esta instalado Pacman
+if (!require("pacman")) install.packages("pacman")
+library(pacman)
+p_load("tidyverse", "sf")
+```
+
+## Funciones propias. 
+
+Muchas veces las librerías no tienen funciones que vamos a ocupar, o necesitamos hacer funciones muy específicas o programar tareas muy repetitivas. Para solucionar esto necesitaremos definir nuestras propias funciones; un ejemplo de eso se muestra en el bloque de código a continuación. 
+
+
+```{r}
+# -------------------------------------- # 
+# Tercero: Sección de funciones propias. #
+# -------------------------------------- #
+
+# Funcion propia! Para convertir variable texto en variable factor
+niveles <- function(x) levels(as.factor(x))
+
+```
+
+## Importar bases de datos. 
+
+En esta sección importamos bases de datos. En el bloque siguiente, estamos importando un archivo `*.geojson` que contiene una base de datos de las colonias de la Ciudad de México. Al igual que la función `readr::read_csv()`, la función `sf::st_read()` nos permite leer bases de datos directamente desde internet. 
+
+
+**Nota: Para referirnos a una función, usamos la nomenclatura librería::nombre_función. Por lo tanto, `sf::st_read()` se lee como: La función `st_read()` de la librería `sf`.**
+
+
+```{r}
+# ------------------------------------------------- #
+# Cuarto. Sección para importar las bases de datos. #
+# ------------------------------------------------- #
+
+base_de_datos <- st_read("http://rir.geoint.mx/RIR/archivos/101_coloniasCDMX.geojson")
+
+```
+
+## Exploración, visualización y manejo. 
+
+Una vez que importamos la base de datos, revisamos que tiene. 
+En el ejemplo siguiente veremos el numero de filas y columnas de la base, el tipo de variable de cada variable y cuantas y cuales delegaciones tiene la base de datos.
+
+```{r}
+# ------------------------------------------------------------- #
+# Quinto: Exploración, Limpieza y manejo de las Bases de Datos. #
+# ------------------------------------------------------------- #
+
+###############  
+# Exploracion #
+############### 
+
+# Cuantas filas y columnas tiene?
+dim(base_de_datos) # 1556 renglones x 6 columnas
+
+# Que tipo de objeto es la base_de_datos? 
+class(base_de_datos) # Objeto sf
+
+# Que delegaciones tenemos en la base?
+niveles(base_de_datos$NOM_MUN)
+
+# Nombres y tipos de datos de las columnas (VARIABLES)
+str(base_de_datos) # Todas son factores menos la ultima
+
+# Limpieza y manejo 
+# Queremos solo 1 columna con la delegacion y 1 con el numero de colonias!
+base_tidy <- base_de_datos %>% 
+  group_by(NOM_MUN) %>% 
+  summarize(`Numero de Colonias` = n()) %>% 
+  as_tibble() %>% 
+  select(-geometry) %>% 
+  arrange(desc(`Numero de Colonias`))
+
+```
+
+## Análisis y estadísticas
+
+Los análisis pueden consistir en estadística exploratoria, pruebas de hipótesis, análisis estadísticos, etc.
+
+En el ejemplo siguiente, mediante visualización exploratoria generaremos una gráfica que nos muestre cual es la demarcación con mayor numero de colonias. 
+
+Todo dependiendo de tu pregunta de investigación. 
+
+```{r}
+# -------------------------------- #
+#	Sexto:  Análisis y estadìsticas. #
+# -------------------------------- #
+
+############
+# Graficas #
+############
+
+# Grafico de Barras #
+ggplot(data = base_tidy, aes(x = reorder(NOM_MUN, `Numero de Colonias`),
+                             y = `Numero de Colonias`, fill = NOM_MUN)) + 
+  geom_bar(stat = "identity") + coord_flip() + labs(y = "Municipio", x = "Numero de colonias", title = "Numero de colonias en la CDMX", caption = "Informacion tomada de la pagina de Centro Geo", subtitle = "Colonias por delegacion en la CDMX") + theme_bw()
+
+# + 
+#   theme_bw() +
+#   coord_flip() +
+#   theme(legend.position = "none") + 
+#   labs(title = "Numero de colonias por Delegación de la Ciudad de México", x = NULL)
+
+
+
+
+```
+
+## Declaración de temas personalizados. 
+
+Muchas veces vamos a escribir textos o artículos cuyas gráficas deben tener un tema o estilo particular y propio. Para esto, R nos dá la opción de declarar temas propios; configuraciones de la estética de las gráficas que podemos reciclar para múltiples usos a lo largo de nuestros documentos. Para el presente gráfico, declararemos un tema sencillo para modificar la gráfica que tenemos arriba. 
+
+Las modificaciones consistirán en cambiar el fondo, el tipo de letra en los textos de los ejes, el color de estas, y en remover la leyenda (la cual, en este caso, no aporta información de valor). 
+
+```{r}
+# Le ponemos un nombre bonito al tema y lo declaramos como un objeto: 
+
+tema_juve <- theme_bw() + theme(text = element_text(family = "Asap-Bold", color = "#25636e"), 
+                   panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank(), 
+                   plot.caption=element_text(hjust=1,size=9,colour="grey30"),
+                   plot.subtitle=element_text(face="italic",size=12,colour="grey40"),
+                   plot.title=element_text(size=12,face="bold", color = "red"),
+                   axis.text.x = element_text(family = "Asap-Bold", color = "grey40"),
+                   axis.text.y = element_text(family = "Asap-Bold", color = "grey40"), 
+                   legend.position = "none" # Removemos la leyenda. 
+                   )
+```
+
+A continuación, lo utilizamos en el gráfico de arriba, al final. 
+
+```{r}
+
+# Grafico de Barras #
+plot <- ggplot(data = base_tidy, aes(x = reorder(NOM_MUN, `Numero de Colonias`),
+                             y = `Numero de Colonias`, fill = NOM_MUN)) + 
+  geom_bar(stat = "identity") + 
+  coord_flip() + 
+  labs(y = "Municipio", x = "Numero de colonias", title = "Numero de colonias en la CDMX", caption = "Informacion tomada de la pagina de Centro Geo - SECTEI - Sección de datos sociodemográficos (www/rir.geoint.mx)", subtitle = "Colonias por delegacion en la CDMX") + 
+  theme_bw() + 
+  tema_juve
+
+# Imprimimos el objeto plot 
+plot
+
+```
+
+## Haciendo la gráfica interactiva con `plotly::ggplotly`
+
+La librería `plotly` nos proveé la función `ggplotly()`, la cuál toma un objeto creado con la función `ggplot` y lo transforma a un objeto `plotly`, dándole ciertas propiedades de interactividad a las gráficas. A continuación un ejemplo rápido: 
+
+```{r}
+# Llamamos a la libreria plotly
+library(plotly)
+# Usamos la funcion ggplotly para transformar la grafica de arriba en una grafica plotly
+ggplotly(plot)
+```
+
+## Impresión de resultados y guardado de información. 
+
+Para finalizar, es bueno guardar los resultados. En este caso guardaremos la imágen de la gráfica anterior en un formato de imágen (formato `*.png`) y la base final en un formato `*.csv`, dentro de nuestra carpeta de trabajo.
+
+```{r}
+
+# -------------------------------------------------------------- #
+# Séptimo: Impresión de resultados y guardado de la información. #
+# -------------------------------------------------------------- #
+
+# Guardamos la grafica 
+ggsave(file = "numeroColoniasCDMX.png", height = 20, width = 18, units = "cm")
+
+# Guardamos la base en un archivo *.csv
+write.csv(base_tidy, "numeroColoniasCDMX.csv")
+```
+
+Recordemos que lo anterior es sólo una sugerencia (mi sugerencia personal). Al final de cuentas cada quien tiene su estilo de trabajo. Sólo hay que recordar que hay que ser lo más ordenados posible, y esto nos permitirá encontrar errores de forma más rápida y entender bien nuestros códigos en el futuro. 
+
+**Juvenal Campos**
+
+Agosto, 2019. 
+
+# Anexo. Mapas en Leaflet. 
+
+Este anexo contiene los primeros pasos para elaborar mapas en `leaflet`.
+
+Como podemos observar de trabajo anterior, la base de datos `base_de_datos` que tenemos precargada es un objeto `sf`, el cual almacena datos de información geoespacial.
+
+Para hacer un mapa simple, utilizamos la función `plot()`. 
+
+```{r}
+plot(base_de_datos)
+```
+
+Si queremos un mapa sólo de una variable (de la primera variable), especificamos el argumento `max.plot = 1`. 
+
+```{r}
+plot(base_de_datos, max.plot = 1)
+```
+
+## Mapa en Leaflet. 
+
+`leaflet` es una librería de la familia de los `htmlwidgets`, las cuales son librerías que nos permiten transformar código de R en html, css y javascript, los cuales son los 3 lenguajes más utilizados en la programación web. 
+
+En el caso particular de la librería `leaflet`, esta nos permite realizar, a partir de bases de datos geográficas, mapas interactivos de polígonos, puntos y líneas. La intereactividad radica en que el usuario tiene la opción de explorar el mapa controlando el zoom, así como desplegando información al pasar el cursor sobre un elemento y/o haciendo click sobre este. 
+
+En el bloque que se muestra a continuación, **haremos un mapa de polígonos muy básico con los polígonos de las colonias de la CDMX.**
+
+```{r}
+library(leaflet)
+
+leaflet(base_de_datos)  %>%  # Creamos un objeto leaflet
+   addTiles()  %>%  # Le aniadimos un fondo bonito
+   addPolygons() # Le aniadimos los poligonos
+
+```
+
+## Mejorando el mapa. 
+
+Podemos mejorar el mapa anterior mediante la adición de alguno de los siguientes elementos: 
+
+* Paleta de colores para visualizar alguna categoría o valor asociado a cada uno de los elementos del mapa. 
+
+* Ventanas que desplieguen información al hacer click sobre alguno de los elementos del mapa, o al pasar el cursor sobre estos. 
+
+* Un fondo, o tile, que de contexto a los elementos que se agreguen al mapa. 
+
+* Una leyenda asociada a una paleta de colores, que nos aporte información relativa a los atributos de cada polígono, punto o línea. 
+
+A continuación, se muestra como añadir estos elementos de mejora al código. 
+
+```{r}
+
+# 1. Paleta de colores. 
+pal_colores <- colorFactor(palette = "viridis", domain = base_de_datos$NOM_MUN)
+
+# 2. Popup 
+popup <- paste0("<b>Colonia: </b>", base_de_datos$TEXT, "<br>", 
+                "<b>Delegación: </b>", base_de_datos$NOM_MUN, "<br>"
+                )
+
+leaflet(base_de_datos) %>%  # Creamos un objeto leaflet
+  addProviderTiles("CartoDB.Positron") %>%  # Le aniadimos un fondo bonito
+  addPolygons(color = "black", 
+              weight = 1,
+              fillColor = pal_colores(base_de_datos$NOM_MUN), 
+              fillOpacity = 1,
+              popup = popup, 
+              label = base_de_datos$TEXT
+              ) %>% 
+  addLegend(position = "bottomleft", pal= pal_colores, 
+            values = base_de_datos$NOM_MUN,
+            title = "Delegación")
+
+```
+
+Si se requiere ahondar más en la elaboración de mapas interactivos con `leaflet`, les recomiendo acudir al siguiente enlace: 
+
+http://rpubs.com/Juve_Campos/LeafletTutorial
+
+Ahí podrán ahondar más la información sobre los tipos de paletas o la creación de mapas multicapa. 
+
