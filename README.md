@@ -28,4 +28,10 @@ Esta carpeta contiene el método para realizar un Wordcloud con el texto referid
 Se incluye código y base de datos del wordcloud de los tweets de la ultima hora (13:00) relativos a la renuncia de Carlos Urzúa. 
 Los tweets están disponibles en el repositorio. 
 
+**6. Sesión de introducción a la visualización interactiva. ggplot(ly) y leaflet.**
+
+Sesión introductoria a la visualización interactiva utilizando las librerías `ggplot`, `plotly` y `leaflet`, impartida en El Colegio de México el 18 de septiembre del 2019. Puede consultarse en http://rpubs.com/Juve_Campos/IntroGgplotYLeaflet. 
+
+
+
 Dudas o aclaraciones: juveroark@gmail.com
