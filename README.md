@@ -28,10 +28,13 @@ Esta carpeta contiene el método para realizar un Wordcloud con el texto referid
 Se incluye código y base de datos del wordcloud de los tweets de la ultima hora (13:00) relativos a la renuncia de Carlos Urzúa. 
 Los tweets están disponibles en el repositorio. 
 
-**6. Sesión de introducción a la visualización interactiva. ggplot(ly) y leaflet.**
+**7. Sesión de introducción a la visualización interactiva. ggplot(ly) y leaflet.**
 
 Sesión introductoria a la visualización interactiva utilizando las librerías `ggplot`, `plotly` y `leaflet`, impartida en El Colegio de México el 18 de septiembre del 2019. Puede consultarse en http://rpubs.com/Juve_Campos/IntroGgplotYLeaflet. 
 
+**8. WordCloud de comentarios de la película de The Joker**
+
+Código, base de datos e imágen del WordCloud en español de comentarios sobre la película de _The Joker_, estrenada el 4 de Octubre del 2019 en México. 
 
 
 Dudas o aclaraciones: juveroark@gmail.com
