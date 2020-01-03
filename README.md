@@ -36,5 +36,8 @@ Sesión introductoria a la visualización interactiva utilizando las librerías 
 
 Código, base de datos e imágen del WordCloud en español de comentarios sobre la película de _The Joker_, estrenada el 4 de Octubre del 2019 en México. 
 
+**9. Bootstrap y RayShader**
+
+Código en el cual se explora el método de análisis _bootstrap_ para obtener coeficientes de regresión, y graficación de coeficientes en 3D.  
 
 Dudas o aclaraciones: juveroark@gmail.com
