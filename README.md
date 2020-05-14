@@ -40,4 +40,8 @@ Código, base de datos e imágen del WordCloud en español de comentarios sobre 
 
 Código en el cual se explora el método de análisis _bootstrap_ para obtener coeficientes de regresión, y graficación de coeficientes en 3D.  
 
+**10. Grado de Escolaridad**
+
+Código para calcular el grado promedio de escolaridad de alguna región de Centroamérica. 
+
 Dudas o aclaraciones: juveroark@gmail.com
