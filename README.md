@@ -44,4 +44,8 @@ Código en el cual se explora el método de análisis _bootstrap_ para obtener c
 
 Código para calcular el grado promedio de escolaridad de alguna región de Centroamérica. 
 
+**11. Paletas y la función palette()**
+
+Ejemplo reproducible para apreciar el mal funcionamiento de la función `palette()`a la hora de definir paletas en RMarkdown. En este caso, las paletas se ven bien en la sesión de RStudio, pero se exportan mal al HTML.
+
 Dudas o aclaraciones: juveroark@gmail.com
