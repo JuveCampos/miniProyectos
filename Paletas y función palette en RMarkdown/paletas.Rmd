@@ -1,0 +1,82 @@
+---
+title: "Prueba de Paletas"
+author: "Juvenal Campos"
+date: "5/31/2020"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Paletas. 
+
+El problema con RMarkdown es que no siempre entiende lo mismo que con nuestra sesión de R. Esta semana, por ejemplo, me di cuenta de que no necesariamente las constantes que toma R para crear semillas son las mismas en Markdown y en RStudio, y eso es problemático, particularmente cuando estas armando un laboratorio y quieres que resutados aleatorios den lo que tu quieres que den :9. 
+
+Lo curioso es que, en el caso de las paletas, no entiendo por que estas varían entre uno y otro. Vamos a hacer un reprex para ver si podemos tener un ejemplo reproducible que nos ayude a discernir este problema: 
+
+```{r}
+# Librerias
+library(leaflet)
+library(wesanderson)
+library(sf)
+
+# Datos
+mx <- st_read("https://raw.githubusercontent.com/JuveCampos/MexicoSinIslas/master/Sin_islas.geojson", quiet = T)
+
+```
+
+Hacemos la visualización. 
+
+```{r}
+
+# Paleta
+tuPaleta <- colorNumeric(palette = 
+                       palette(wes_palette("Zissou1", 
+                                          n = 100, 
+                                          type = "continuous")),
+                     domain = mx$AREA
+                     )
+
+miPaleta <- colorNumeric(palette = wes_palettes$Zissou1, 
+                         domain = mx$AREA)
+
+# Mi mapa
+mx %>% 
+  leaflet(options = 
+            leafletOptions(zoomControl = FALSE, 
+                           maxZoom = 5, 
+                           minZoom = 5)) %>% 
+  setMaxBounds(lng1 = -86.72, 
+                   lat1 = 14.52, 
+                   lng2 = -117.13, 
+                   lat2 = 32.53) %>% 
+  addPolygons(color = "black", 
+              weight = 0.5,
+              fillColor = miPaleta(mx$AREA), 
+              fillOpacity = 1) %>% 
+  addLegend(pal = miPaleta, 
+            values = mx$AREA)
+
+# Tu mapa
+mx %>% 
+  leaflet(options = 
+            leafletOptions(zoomControl = FALSE, 
+                           maxZoom = 5, 
+                           minZoom = 5)) %>% 
+  setMaxBounds(lng1 = -86.72, 
+                   lat1 = 14.52, 
+                   lng2 = -117.13, 
+                   lat2 = 32.53) %>% 
+  addPolygons(color = "black", 
+              weight = 0.5,
+              fillColor = tuPaleta(mx$AREA), 
+              fillOpacity = 1) %>% 
+  addLegend(pal = tuPaleta, 
+            values = mx$AREA)
+
+```
+
