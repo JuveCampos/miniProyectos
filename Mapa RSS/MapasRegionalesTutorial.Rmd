@@ -1,0 +1,144 @@
+---
+title: "Generación de mapas regionales"
+author: "Juvenal Campos"
+date: "6/1/2020"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Mapas regionales
+
+El presente documento interno es para la realización de mapas regionales. Código reproducible con las librerías correspondientes. 
+
+Librerías: 
+
+```{r cache = FALSE, warning=FALSE, message=FALSE}
+# Librerias
+library(tidyverse)
+library(leaflet)
+library(sf)
+```
+
+Leemos una base de datos de los mapas disponible en mi GitHub.
+
+```{r}
+# Base de datos
+mx <- st_read("https://raw.githubusercontent.com/JuveCampos/MexicoSinIslas/master/Sin_islas.geojson",
+              quiet = T)
+```
+
+Seleccionamos los estados de la Región de interés (en este caso, los estados de la Región Sur Sureste).
+
+```{r}
+# Region
+rss <- c("CAMPECHE",
+         "CHIAPAS",
+         "GUERRERO",
+         "OAXACA",
+         "PUEBLA",
+         "QUINTANA ROO",
+         "TABASCO",
+         "VERACRUZ DE IGNACIO DE LA LLAVE",
+         "YUCATAN")
+```
+
+Generamos una variable de clasificación: 
+
+```{r}
+# Variable de región
+mx$region <- ifelse(test = mx$ENTIDAD %in% rss,
+                    yes = "Región Sur Sureste",
+                    no = "Resto del país")
+```
+
+Generamos una paleta de colores, donde sea morado para la región de interés y gris para la que no lo es: 
+
+```{r}
+pal = colorFactor(palette = c("purple", "gray"),
+                  domain = mx$region)
+```
+
+Construimos el mapa: 
+
+```{r}
+# Mapa
+leaflet(mx) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(color = "white",
+              dashArray = c(1,1),
+              fillOpacity = 0.85,
+              weight = 2,
+              fillColor = pal(mx$region)) %>%
+  addLegend(title = "Leyenda",
+            position = "bottomright",
+            colors = "purple",
+            labels = "Región<br>Sur-Sureste"
+            )
+```
+
+Ahora, si quisieramos que cada entidad de la región tuviera un color distinto y personalozado, haríamos lo siguiente: 
+
+Primero, generamos una nueva variable en donde todos los estados que pertenezcan a la región mantienen su nombre, y los que no solo entran en un grupo de "Resto del país": 
+
+```{r}
+# Multiples estados
+mx$edoMultiple <- case_when(mx$region == "Región Sur Sureste" ~ str_to_title(mx$ENTIDAD),
+                            mx$region != "Región Sur Sureste" ~ "Resto del País")
+```
+
+Después generamos la paleta, recordando que los estados se ordenan en orden alfabético: 
+
+```{r}
+# Paleta
+pal2 <- colorFactor(palette = c(
+                    "#928cbd",  #Campeche
+                    "#6d5f99",  #Chiapas
+                    "#9f8f12",  #Guerrero
+                    "#3691a4",  #Oaxaca
+                    "#ccb22b",  #Puebla
+                    "#27697b",  #QROO
+                    "gray",     #Resto de estados
+                    "#5faa85",  #Tabasco
+                    "#87c6c6",  #Veracruz
+                    "#c0a521"), #Yucatán
+                   domain = mx$edoMultiple)
+```
+
+Y finalmente armamos el mapa
+
+```{r}
+# Mapa
+leaflet(mx, options = leafletOptions(zoomControl = FALSE)) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(color = "white",
+              dashArray = c(1,1),
+              fillOpacity = 0.95,
+              weight = 2,
+              fillColor = pal2(mx$edoMultiple))
+```
+
+Código eliminado: 
+
+```{r}
+# %>%
+#   addLegend(title = "Entidades<br>Región Sur Sureste",
+#             position = "bottomright",
+#             opacity = 1,
+#             pal = pal2, values = mx$edoMultiple[mx$edoMultiple != "Resto del País"]
+#             #colors = "purple",
+#             #labels = "Región<br>Sur-Sureste"
+#   )
+```
+
+Aplicando post-producción en Keynote finalmente se ve así: 
+![](/Users/admin/Desktop/postProducción.png)
+
+
+
+
