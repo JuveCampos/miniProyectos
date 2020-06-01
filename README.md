@@ -48,4 +48,10 @@ Código para calcular el grado promedio de escolaridad de alguna región de Cent
 
 Ejemplo reproducible para apreciar el mal funcionamiento de la función `palette()`a la hora de definir paletas en RMarkdown. En este caso, las paletas se ven bien en la sesión de RStudio, pero se exportan mal al HTML.
 
+**12. Tutorial de generación de mapas regionales (REGION RSS)**
+
+Ejemplo reproducible para realizar mapas de regionalizaciones de los estados del país.
+
+![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/Mapa%20RSS/postProducción.png)
+
 Dudas o aclaraciones: juveroark@gmail.com
