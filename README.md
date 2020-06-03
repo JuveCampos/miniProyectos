@@ -54,4 +54,11 @@ Ejemplo reproducible para realizar mapas de regionalizaciones de los estados del
 
 ![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/Mapa%20RSS/postProducción.png)
 
+**13. Guía para recortar rasters en R**
+
+Guía para recortar archivos tipo raster en R, a partir de un polígono `sf`. 
+
+![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/Guia%20definitiva%20para%20recortar%20un%20raster/recortaRaster.png)
+
+
 Dudas o aclaraciones: juveroark@gmail.com
