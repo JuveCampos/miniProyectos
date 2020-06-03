@@ -1,0 +1,83 @@
+---
+title: "Guía definitiva para recortar un raster ante un polígono"
+author: "Juvenal Campos"
+date: "6/3/2020"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Esta es la guía definitiva ante un problema de procesamiento recurrente que he tenido desde 2018 y al cual espero poderle dar una solución definitiva: **Recortar un raster en función de un polígono.**
+
+### Librerias
+```{r, cache = FALSE, message = FALSE, warning = FALSE}
+# Librerias
+library(raster)
+library(sf)
+library(leaflet)
+```
+
+
+### Paso 1. Leer el objeto. 
+
+La base de datos a utilizar en este ejemplo se puede descargar en el siguiente [enlace.](http://ri.atmosfera.unam.mx:8586/geonetwork/srv/spa/catalog.search#/metadata/8375be92-5d32-4221-a8bf-8c1c1e8e21ff)
+
+```{r}
+# Raster de precipitaciones acumuladas en diciembre, 
+## periodo 1902-2015
+## disponible en 
+pp <- raster("01_bases/Uniatmos/prec_1902_2015/GeoTIFF/prec_12.tif")
+
+# Contorno, Mapa de Nayarit
+contorno <- st_read("01_bases/Mapas Base/LIMITE_ESTATAL_NAYARIT.json", quiet = TRUE) %>%
+  st_transform(crs = 4326)
+```
+
+### Paso 2. Metodo. 
+
+El método para el recorte es el siguiente: 
+
+```{r}
+# Convertimos el contorno a un objeto Spatial
+pp_sp <- as(contorno, "Spatial")
+# Recortando la capa de precipitaciones a un rectangulo con
+## el spatial
+cropeado <- crop(pp, pp_sp)
+# Recortamos usando como máscara al poligono
+nay_mask <- mask(cropeado, mask = pp_sp)
+# Ploteamos el objeto recortado
+plot(nay_mask)
+```
+
+### Guardado del Raster
+
+```{r, eval=FALSE}
+# Guardado del raster
+raster::writeRaster(nay_mask, "03_resultados/rasterPrecipitacionDiciembre.tif")
+```
+
+### Ploteado fancy del raster
+
+```{r}
+# Paleta de colores
+pal <- colorNumeric("Spectral",
+                    values(nay_mask),
+                    na.color = "transparent")
+# Mapa elegante
+leaflet() %>% 
+  addProviderTiles("CartoDB.Positron") %>% 
+  addRasterImage(nay_mask, 
+                 colors = pal, 
+                 opacity = 0.8) %>% 
+  addLegend(pal = pal, values = values(nay_mask),
+            title = "Precipitación<br>Diciembre", 
+            labFormat = labelFormat(suffix = " mm"),
+            position = "bottomright")
+
+```
+
