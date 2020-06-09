@@ -63,7 +63,7 @@ Guía para recortar archivos tipo raster en R, a partir de un polígono `sf`.
 
 **14. Mapa casos COVID-19 para el estado de Morelos**
 
-Mapa de casos de COVID-19 reportados para el estado de Morelos al 17 de Abril del 2020. 
+Mapa de casos de COVID-19 reportados para el estado de Morelos al 23 de Abril del 2020. 
 
 ![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/MapaMorelosCOVID17042020/mapaMorCOVID.png)
 
