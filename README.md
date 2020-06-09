@@ -61,4 +61,11 @@ Guía para recortar archivos tipo raster en R, a partir de un polígono `sf`.
 ![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/Guia%20definitiva%20para%20recortar%20un%20raster/recortaRaster.png)
 
 
+**14. Mapa casos COVID-19 para el estado de Morelos**
+
+Mapa de casos de COVID-19 reportados para el estado de Morelos al 17 de Abril del 2020. 
+
+![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/MapaMorelosCOVID17042020/mapaMorCOVID.png)
+
+
 Dudas o aclaraciones: juveroark@gmail.com
