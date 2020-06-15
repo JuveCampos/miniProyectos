@@ -1,0 +1,93 @@
+---
+title: "Tarea 8 PdD"
+author: "Juvenal Campos"
+date: "6/14/2020"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Tarea 8
+
+**Nombre:** Juvenal Campos Ferreira
+
+¡Hay un problema con las pitufresas! El Ministerio de Agricultura de la aldea pitufa (ahora tienen burocracia para todo) ha anunciado que una plaga ataca a los arbustos de pitufresas, que afecta las plantas y  hace que las fresas ahora sepan a chocolate. La plaga del Pitufichocolate ha causado un escándalo en los mercados internacionales de pitufresas y el Ministerio ha comisionado expertos (entre ellos tú) para hacer un diagnóstico del problema.
+
+Para estudiarlo, 6 investigadores del Instituto Pitufo de Estadísticas (IPE) visitaron algunas huertas de pitufresas y probaron una pitufresa de cada árbol. Cada investigador probó 148 pitufresas y registró en su base de datos 0 si sabía a pitufresa y 1 si sabe al temido chocolate. Carga la base choco.csv en tu sesión de R. La base choco contiene los resultados de cada investigador 
+
+```{r message = FALSE, cache = FALSE, warning = FALSE}
+# Leemos base de datos
+library(tidyverse)
+choco <- read_csv("choco.csv") %>% select(-X1)
+```
+
+Los investigadores dicen que hicieron muestras aleatorias dentro de cada huerta visitada y como son muy profesionales, les vamos a creer. El problema sucedió en las oficinas centrales del IPE, donde algún papanatas guardó los datos de cada investigador pero no la huerta que visitaron - y, es un escándalo, ni siquiera si visitaron la misma o visitaro huertas diferentes. Entonces, tenemos seis investigadores que probaron 148 fresas cada uno, y necesitamos calcular la probabilidad de que cada huerta esté afligida con Chocopitufo. Y necesitamos hacerlo YA. 
+
+**1.** Usando `colSums()`, calcula el número de árboles de pitufresas afligidas (codificadao como 1) por cada investigador. Recuerda que `colSums()` suma los valores de cada una de las columnas de un dataframe, por lo que solo es necesario agregar el nombre de este (choco) sin referirte a cada columna (mucho conveniente!) Luego divide el vector resultante entre el tamaño de la muestra (n) para calcular la proporción de árboles afligidos. (5 pts)
+
+```{r}
+colSums(choco)/nrow(choco)
+```
+
+**2.** Si interpretamos el total de las fresas probadas por cada investigador como su espacio muestral y las que supieron a chocolate como los eventos que estamos evaluando, ¿cuál investigador tuvo la probabilidad más alta de probar chocofresas? ¿cuál la más baja? (5 pts)
+
+```{r}
+probInvestigador <- colSums(choco)/nrow(choco)
+```
+
+**R.** El investigador 2 es el que tuvo la probabilidad mas alta
+**R.** El investigador 5 es el que tiene la mas baja. 
+
+**3.** Desde luego, el IPE quiere saber si hay alguna diferencia entre los lugares que visitaron los investigadores. Pero como ya salieron a campo otra vez, no pueden reportar a donde fueron.  Usando `barplot()`, traza una gráfica de barras con las probabilidad de cada investigador. Por lo que ves, ¿qué dirías al jefe que tiene que pasar el reporte al Ministerio de Agricultura YA YA YA: los investigadores fueron a una sola huerta, o a varias? (5 pts)
+
+```{r}
+barplot(probInvestigador)
+```
+
+A varias. Los datos hacen pensar que acudieron a tres huertas distintas, esto debido a que hay tres tipos de barras: las primeras 3 barras, la cuarta y las ultimas dos. 
+
+**4.** El jefe, típico que no tiene una brizna de idea de cómo entender estos datos, inmediatamente te dice que muchos de los grupos que se ven en los datos son pura ilusión porque, ooobvio, no son idénticos. Con tus estudios de estadística y probabilidad, tú respondes que eso no es un problema, a lo que el jefe te mira incrédulo ¿Por qué los resultadoos de un sólo grupo pueden variar? (5 pts)
+
+__Acá lo que el director entendió es que si todas las observaciones son variables, entonces no necesariamente son de la misma parcela.__
+
+**R:** La diferencia entre una observación y otra del mismo grupo puede ser originada simplemente por el azar del levantamiento de la muestra. En estos casos (las primeras tres columnas y las ultimas dos), podemos decir con cierta seguridad que pertenecen a una misma parcela, que la diferencia es muy pequenia y que es producto de la aleatoreidad. 
+
+**5.** El Viceministro de Pitufresas pidió a los científicos del IPE verificar sus números y pidieron una muestra aleatorias del primero de los huertos de tamaño 50. Selecciona la muestra usando la primera columna de choco y calcula la proporción de pitufresas afligidas en ese huerto (todos los elementos de choco tendrán la misma probabilidad de selección, así que no será necesario especificar las probabilidades) ¿es mayor, igual o menor que la proporción medida por el investigador 1? (5 pts.)
+
+```{r}
+set.seed(123)
+library(moderndive)
+mue1 <- sample(choco$inv1, size= 50, rep= T)
+sum(mue1)/50
+```
+
+* Realizamos el muestreo.
+
+```{r}
+muestreo <- rep_sample_n(tibble(datos = choco$inv1), 
+             size = 50, 
+             reps = 1000) %>% 
+  summarise(media = mean(datos))
+```
+
+* Graficamos la istribución muestral
+
+```{r}
+muestreo %>% 
+  ggplot(aes(media)) + 
+  geom_density() + 
+  geom_vline(xintercept = 0.79, color = "red") + 
+  geom_vline(xintercept = 0.8, color = "green")
+```
+
+_La gráfica anterior nos muestra las posibles medias que pudo haber registrado el investigador 1 si hubiera hecho su muestreo aleatorio unas 1,000 veces. La línea roja es lo que recogió el investigador 1, mientras que la línea verde es la obtenida en un segundo muestreo. Como podemos ver, la probabilidad de obtener tanto la línea roja como la verde es muy similar, por lo que podemos decir que ambos casos son altamente probables dadas las condiciones de la huerta 1._
+
+**6.** El Viceministro recibió los resultados e inmediatamente preguntó por qué el número no era idéntico a la proporción medida por el investigador 1. 
+Tú le explicas que no es idéntico porque... (5 pts)
+
+**R: ** Porque la probabilidad de, con una muestra aleatoria los resultados sean iguales es practicamente imposible. 
