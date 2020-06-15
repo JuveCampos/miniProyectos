@@ -67,5 +67,10 @@ Mapa de casos de COVID-19 reportados para el estado de Morelos al 23 de Abril de
 
 ![](https://raw.githubusercontent.com/JuveCampos/miniProyectos/master/MapaMorelosCOVID17042020/mapaMorCOVID.png)
 
+**15. Tarea 8 PdD**
+
+Documento de respuesta de una tarea muy interesante del curso, pero que no se explicó de manera satisfactoria. 
+
+
 
 Dudas o aclaraciones: juveroark@gmail.com
