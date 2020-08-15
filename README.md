@@ -71,6 +71,10 @@ Mapa de casos de COVID-19 reportados para el estado de Morelos al 23 de Abril de
 
 Documento de respuesta de una tarea muy interesante del curso, pero que no se explicó de manera satisfactoria. 
 
+**16. Calculo de la población que vive con menos de 1.9 USD al día en 2014 (PPP 2011)**
+
+Calculo del porcentaje de personas que viven con menos de 1.9 USD al día en los estados de CHiapas y Tabasco. Tengo mis dudas sobre el cálculo de la línea de pobreza, pero el método es satisfactorio. 
+
 
 
 Dudas o aclaraciones: juveroark@gmail.com
