@@ -20,7 +20,7 @@ bd <- read_table2(paste0("https://smn.conagua.gob.mx/tools/RESOURCES/Diarios/90"
                      skip = 18)
 
 # Nota! Esto funciona si tenemos, dentro de nuestro proyecto, una carpeta llamada "01/Datos" y dentro una llamada "Datos Conagua". 
-# Si no, borra esa parte.
+# Si no, borra esa parte: 01_Datos/Datos Conagua/
 write.csv(bd, paste0("01_Datos/Datos Conagua/90",estacion,".csv"))
 
 # ¿Qué contiene esta secuencia? 
