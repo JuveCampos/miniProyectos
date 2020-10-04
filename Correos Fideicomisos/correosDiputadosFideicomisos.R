@@ -545,7 +545,7 @@ dips <- tibble::tribble(
 
 for(i in 1:nrow(dips)){
   
-  print(paste0(dips$correos_diputados[i], ":  ", i"/502"))
+  print(paste0(dips$correos_diputados[i], ":  ", i, "/502"))
   
   # Mandar mail de prueba
   send.mail(from = correo,
