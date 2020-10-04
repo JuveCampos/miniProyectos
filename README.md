@@ -75,6 +75,9 @@ Documento de respuesta de una tarea muy interesante del curso, pero que no se ex
 
 Calculo del porcentaje de personas que viven con menos de 1.9 USD al día en los estados de CHiapas y Tabasco. Tengo mis dudas sobre el cálculo de la línea de pobreza, pero el método es satisfactorio. 
 
+**17. Correo Fideicomisos**
+
+Script para mandar un correo a todos los diputados de la cámara para solicitarles no aprobar el dictamen de la desaparición de diversos fideicomisos de apoyo a la ciencia y a la tecnología. 
 
 
 Dudas o aclaraciones: juveroark@gmail.com
