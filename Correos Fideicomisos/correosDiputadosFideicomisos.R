@@ -3,6 +3,12 @@
 # En caso de que no te funcione en tu computadora, siempre puedes recurrir a RStudio Cloud
 # que tiene todas las librerías activadas, sin problemas de instalaciones. 
 
+# Instrucciones. 
+# Copia el código (de preferencia en RStudio Cloud
+# Cambia tus datos
+# Selecciona y corre el código
+# Y listo. 
+
 # Checar si esta instalado Pacman
 if (!require("pacman")) install.packages("pacman")
 
