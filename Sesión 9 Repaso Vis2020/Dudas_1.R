@@ -10,18 +10,18 @@ library(leaflet)
 # ¿Qué son los atributos? 
 bd_atributos <- read_csv("https://raw.githubusercontent.com/JuveCampos/30DayMapChallenge2019/master/07.%20Red/EstadosTomate.csv")
 
-# # Modificacion de variables
-# bd_atributos$Estado <- str_replace_all(bd_atributos$Estado,
-#                                c(
-#                                  "MÉXICO" = "MEXICO",
-#                                  "MICHOACÁN DE OCAMPO" = "MICHOACAN DE OCAMPO",
-#                                  "NUEVO LEÓN" = "NUEVO LEON",
-#                                  "QUERÉTARO" = "QUERETARO DE ARTEAGA",
-#                                  "SAN LUIS POTOSÍ" = "SAN LUIS POTOSI",
-#                                  "YUCATÁN" = "YUCATAN",
-#                                  "CIUDAD DE MEXICO" = "CIUDAD DE MÉXICO"
-#                                )
-# )
+# Modificacion de estados sin acento. 
+bd_atributos$Estado <- str_replace_all(bd_atributos$Estado,
+                                c(
+                                  "MÉXICO" = "MEXICO",
+                                  "MICHOACÁN DE OCAMPO" = "MICHOACAN DE OCAMPO",
+                                  "NUEVO LEÓN" = "NUEVO LEON",
+                                  "QUERÉTARO" = "QUERETARO DE ARTEAGA",
+                                  "SAN LUIS POTOSÍ" = "SAN LUIS POTOSI",
+                                  "YUCATÁN" = "YUCATAN",
+                                  "CIUDAD DE MEXICO" = "CIUDAD DE MÉXICO"
+                                )
+ )
 
 # ¿Qué son las geometrías? 
 bd_geometrias <- st_read("https://raw.githubusercontent.com/JuveCampos/MexicoSinIslas/master/Sin_islas.geojson")
