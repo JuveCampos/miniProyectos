@@ -79,5 +79,12 @@ Calculo del porcentaje de personas que viven con menos de 1.9 USD al día en los
 
 Script para mandar un correo a todos los diputados de la cámara para solicitarles no aprobar el dictamen de la desaparición de diversos fideicomisos de apoyo a la ciencia y a la tecnología. 
 
+**18. WordCloud Incendio Pemex**
+
+Script para realizar el WordCloud sobre el tema de `Pemex` el día del incendio en el Golfo de México. 
+
+<blockquote class="twitter-tweet"><p lang="es" dir="ltr">La nube de palabras con el tema <a href="https://twitter.com/hashtag/Pemex?src=hash&amp;ref_src=twsrc%5Etfw">#Pemex</a> para el día de hoy. <a href="https://t.co/ekz9IOUqsp">pic.twitter.com/ekz9IOUqsp</a></p>&mdash; Juvenal (@JuvenalCamposF) <a href="https://twitter.com/JuvenalCamposF/status/1411149269583597572?ref_src=twsrc%5Etfw">July 3, 2021</a></blockquote> 
+
+
 
 Dudas o aclaraciones: juveroark@gmail.com
